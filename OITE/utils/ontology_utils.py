@@ -1,6 +1,10 @@
 import uuid
-from rdflib import Graph, Namespace, URIRef, Literal
+import numpy as np
+from rdfltpib import Graph, Namespace, URIRef, Literal
 from rdflib.namespace import RDF
+from tensorflow.keras.preprocessing import image
+from utils.img_utils import imgUtils
+
 
 class OntologyUtils:
     """
@@ -117,3 +121,40 @@ class OntologyUtils:
         
         # Save the graph to a Turtle file
         g.serialize(destination=f"{diagram_name}.ttl", format="turtle")
+
+
+    def classify_image(model, img):
+        """
+        Classifies an image into OntoUML or not using a pre-trained model.
+
+        Parameters
+        ----------
+        model : tensorflow.keras.Model
+            The pre-trained model used for classification.
+        img : numpy.ndarray
+            Image to classify
+
+        Returns
+        -------
+        bool
+            True if the image was classified as the first class (index 0), False otherwise.
+        """
+        # Load the image
+        img = imgUtils.resize_and_pad_image(img)
+
+        # Convert the image to a numpy array and expand dimensions to fit the model input
+        img_array = image.img_to_array(img)
+        img_array = np.expand_dims(img_array, axis=0)
+        
+        # Normalize the image array if necessary (assuming the model was trained with normalized inputs)
+        img_array /= 255.0
+        
+        # Use the model to predict the class of the image
+        predictions = model.predict(img_array)
+        
+        # Assuming the model output is a probability for each class
+        # and that class 0 or the first class is the desired class
+        class_index = np.argmax(predictions[0])
+        
+        # Return True if the image was classified as the first class (0), False otherwise
+        return class_index == 0

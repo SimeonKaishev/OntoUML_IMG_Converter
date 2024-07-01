@@ -67,7 +67,7 @@ class Relation:
     @staticmethod
     def detect_relations(original_img, image_path):
         """
-        Detects relations in an image by finding and approximating contours.
+        Detects possible relations in an image by finding and approximating contours.
 
         Parameters
         ----------

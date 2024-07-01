@@ -12,6 +12,9 @@ class imgUtils:
 
     cutImage(image, rect)
         Cuts out a portion of the image defined by a rectangle.
+
+    wipe_classes(img, classes)
+        Removes the areas occupied by OntoUML classes from the image by drawing white rectangles over them.
     """
 
     @staticmethod
@@ -62,3 +65,27 @@ class imgUtils:
             The cut-out portion of the image.
         """
         return image[rect.y:rect.y + rect.height, rect.x:rect.x + rect.width]
+    
+    @staticmethod
+    def wipe_classes(img, classes):
+        """
+        Removes the areas occupied by OntoUML classes from the image by drawing white rectangles over them.
+
+        Parameters
+        ----------
+        img : numpy.ndarray
+            The image from which to wipe the OntoUML classes.
+        classes : list
+            A list of OntoUMLClass objects whose areas are to be wiped from the image.
+
+        Returns
+        -------
+        numpy.ndarray
+            The image with the areas occupied by OntoUML classes wiped clean.
+        """
+        no_class_img = img.copy()
+        for c in classes:
+            cv2.rectangle(no_class_img, (c.whole.x - 5 , c.whole.y - 5), 
+                          (c.whole.x + c.whole.width + 5, c.whole.y + c.whole.height + 5), 
+                          (255, 255, 255), -1)
+        return no_class_img

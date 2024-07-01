@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from PIL import Image
 
 class imgUtils:
     """
@@ -15,6 +16,9 @@ class imgUtils:
 
     wipe_classes(img, classes)
         Removes the areas occupied by OntoUML classes from the image by drawing white rectangles over them.
+
+    resize_and_pad_image(image_array, size):
+        Resize and pad the image to the desired size, preserving aspect ratio.
     """
 
     @staticmethod
@@ -89,3 +93,49 @@ class imgUtils:
                           (c.whole.x + c.whole.width + 5, c.whole.y + c.whole.height + 5), 
                           (255, 255, 255), -1)
         return no_class_img
+    
+    def resize_and_pad_image(image_array, size=(500, 500)):
+        """
+        Resize and pad the image to the desired size, preserving aspect ratio.
+
+        Parameters
+        ----------
+        image_array : numpy.ndarray
+            The input image as a numpy array.
+        size : tuple, optional
+            The desired size of the output image (default is (900, 900)).
+
+        Returns
+        -------
+        numpy.ndarray
+            The resized and padded image as a numpy array.
+        """
+        # Convert numpy array to PIL Image
+        img = Image.fromarray(image_array)
+
+        # Get the original dimensions
+        original_width, original_height = img.size
+
+        # Calculate the new dimensions preserving the aspect ratio
+        aspect_ratio = original_width / original_height
+
+        if aspect_ratio > 1:  # Width is greater than height
+            new_width = size[0]
+            new_height = int(size[0] / aspect_ratio)
+        else:  # Height is greater than width or square
+            new_height = size[1]
+            new_width = int(size[1] * aspect_ratio)
+
+        # Resize the image with the new dimensions
+        img = img.resize((new_width, new_height))
+
+        # Create a new image with the desired size and black (zero) padding
+        new_img = Image.new("RGB", size, (0, 0, 0))
+
+        # Paste the resized image onto the center of the new image
+        new_img.paste(img, ((size[0] - new_width) // 2, (size[1] - new_height) // 2))
+
+        # Convert the new image to a numpy array
+        img_array = np.array(new_img)
+
+        return img_array

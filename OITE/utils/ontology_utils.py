@@ -1,6 +1,6 @@
 import uuid
 import numpy as np
-from rdfltpib import Graph, Namespace, URIRef, Literal
+from rdflib import Graph, Namespace, URIRef, Literal
 from rdflib.namespace import RDF
 from tensorflow.keras.preprocessing import image
 from utils.img_utils import imgUtils
@@ -154,6 +154,7 @@ class OntologyUtils:
         
         # Assuming the model output is a probability for each class
         # and that class 0 or the first class is the desired class
+        print(predictions)
         class_index = np.argmax(predictions[0])
         
         # Return True if the image was classified as the first class (0), False otherwise

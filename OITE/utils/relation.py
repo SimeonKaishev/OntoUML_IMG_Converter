@@ -183,7 +183,7 @@ class Relation:
             for rc in rel.classes:
                 print(rc.name)
             print("\n")
-        cv2.imshow("All Relations", image_all)
+        #cv2.imshow("All Relations", image_all)
         
     @staticmethod
     def get_number_of_classes(class_relations):
@@ -257,7 +257,7 @@ class Relation:
         """
         # Resize to the image size the model takes
         image_resized = cv2.resize(image, input_size)
-        cv2.imshow("Resized Image", image_resized)
+        #cv2.imshow("Resized Image", image_resized)
         # Convert to RGB
         rgb_image = cv2.cvtColor(image_resized, cv2.COLOR_GRAY2RGB)
         # Add batch dimension

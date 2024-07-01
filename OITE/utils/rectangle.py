@@ -262,14 +262,14 @@ class Rectangle:
             cv2.drawContours(image, [contour], -1, (0, 0, 255), 3)
             cv2.drawContours(image_all, [contour], -1, (0, 0, 255), 3)
             # cv2.imshow("Rectangle", image)
-        cv2.imshow("All Rectangles", image_all)
+        #cv2.imshow("All Rectangles", image_all)
 
         # Draw and wipe the rectangles
         cv2.drawContours(img, rect_contours, -1, (255, 255, 255), 5)
         
         #TODO remove after testing
         # Display the result
-        cv2.imshow("Processed Image", img)
+        #cv2.imshow("Processed Image", img)
         
         print(f"Detected {len(rect_contours)} rectangles")
         return img, all_rect_areas

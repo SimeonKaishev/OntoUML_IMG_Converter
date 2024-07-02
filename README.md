@@ -1,8 +1,18 @@
 # OntoUML_IMG_Converter
-### Part of Simeon Kaishev's Bachelor's Thesis
-
+should have a link to the paper
+## OITE
+basically what it is and to check the readme in the OITE directory on how to install it and use it
+link to the list of used images and results can be found in the dir...
 ## Link to the datasets used for training:
-TODO: add
+datasets can be found on hugging face:
+- link
+- link
+- link
+## Custom GPT
+the gpt was made to test using LLMS for the translation
+- it can be found at: link
+- the images fromt the test can be found in the Test Images dir
 
+  
 
 

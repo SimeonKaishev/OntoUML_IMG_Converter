@@ -5,84 +5,134 @@ from utils.rectangle import Rectangle
 from utils.ontouml_class import OntoUMLClass
 from utils.relation import Relation
 from utils.ontology_utils import OntologyUtils
-
-# load model for img classification
-model_path_ontouml = 'models/my_model_3 class_good'
-model_OntoUML_detect = tf.keras.models.load_model(model_path_ontouml)
-# load model for rel classification
-model_path_relation = 'models\Relationship_classifier'
-model_relationship_detect = tf.keras.models.load_model(model_path_relation)
-print("finished leading models")
+import os
 
 
-# TODO add basic textual UI to specify image folders and so on
+def convert_image(image_path, model_OntoUML_detect, model_relationship_detect):
+    """
+    Translate the given image to OntoUML Vocab if it's of an OntoUML diagram.
 
-#load image
-image_path = 'offline.png'
-diagram_name = image_path.replace(".png", "")
+    Args:
+        image_path (str): The path to the image to be processed.
+        model_OntoUML_detect: The model used for detecting OntoUML diagrams.
+        model_relationship_detect: The model used for detecting relationships in the diagram.
+    """
+   #load image
+    image_path = 'offline.png'
+    diagram_name = image_path.replace(".png", "")
 
-processed_img, binary_img = imgUtils.get_img_processed(image_path)
-clean_img = cv2.imread(image_path)
+    processed_img, binary_img = imgUtils.get_img_processed(image_path)
+    clean_img = cv2.imread(image_path)
 
-# check if image is ontoUML with model
-is_OntoUML = OntologyUtils.classify_image(model_OntoUML_detect, clean_img)
-if not is_OntoUML:
-  print(is_OntoUML)
-  # TODO stop converiting
-  pass
+    # check if image is ontoUML with model
+    is_OntoUML = OntologyUtils.classify_image(model_OntoUML_detect, clean_img)
 
-# get rectangles
-no_class_img, rectangles = Rectangle.detect_rectangles(processed_img, image_path)
-no_class_img2, rectangles2 =  Rectangle.detect_rectangles(binary_img, image_path)
-binary = False
+    # get rectangles
+    no_class_img, rectangles = Rectangle.detect_rectangles(processed_img, image_path)
+    no_class_img2, rectangles2 =  Rectangle.detect_rectangles(binary_img, image_path)
+    binary = False
 
-# take whichever processing resulted in more rectangles detected
-if len(rectangles2) > len(rectangles):
-    rectangles, no_class_img = rectangles2, no_class_img2
-binary = True
+    # take whichever processing resulted in more rectangles detected
+    if len(rectangles2) > len(rectangles):
+        rectangles, no_class_img = rectangles2, no_class_img2
+        binary = True
 
- # get classes
-all_rect_areas_in_cd = (processed_img, rectangles)
-merged_classes = OntoUMLClass.merge_into_class(all_rect_areas_in_cd)
-print(len(merged_classes))
+    # get classes
+    all_rect_areas_in_cd = (processed_img, rectangles)
+    merged_classes = OntoUMLClass.merge_into_class(all_rect_areas_in_cd)
+    print(len(merged_classes))
 
-# extract elements from class text
-classes = OntoUMLClass.detectText(processed_img, merged_classes)
-classes = OntoUMLClass.set_names_and_remove_empty_classes(classes)
+    # extract elements from class text
+    classes = OntoUMLClass.detectText(processed_img, merged_classes)
+    classes = OntoUMLClass.set_names_and_remove_empty_classes(classes)
 
-# check stereotypes for OntoUML
-ontouml_stereotypes = OntoUMLClass.check_stereotypes(classes)
-print(ontouml_stereotypes)
-if ontouml_stereotypes < 1:
-# TODO not ontoUML, so dont continue converting
-    pass
+    # check stereotypes for OntoUML
+    ontouml_stereotypes = OntoUMLClass.check_stereotypes(classes)
+    print(ontouml_stereotypes)
+    if ontouml_stereotypes < 1 and not is_OntoUML:
+       print("Image not OntoUML, Skipping")
+       return
 
- # wipe class rectangles again, incese extra objects were detected during rectangle detection
-if binary:
-    no_class_img2 = imgUtils.wipe_classes(binary_img, classes)
-else:
-    no_class_img2 = imgUtils.wipe_classes(processed_img, classes)
-
-# get relationships
-remaining_shapes = Relation.detect_relations(no_class_img, image_path)
-class_relations = Relation.get_relations(remaining_shapes, classes)
-
-remaining_shapes = Relation.detect_relations(no_class_img2, image_path)
-class_relations2 = Relation.get_relations(remaining_shapes, classes)
-
-
- # take whichever detection found the most relationships
-if len(class_relations) <= len(class_relations2):
-# If equal # of relations, pick the one which connects more classes
-    if len(class_relations) == len(class_relations2):
-        cl1 = Relation.get_number_of_classes(class_relations)
-        cl2 = Relation.get_number_of_classes(class_relations2)
-        if cl1 <= cl2:
-            class_relations = class_relations
+    # wipe class rectangles again, incese extra objects were detected during rectangle detection
+    if binary:
+        no_class_img2 = imgUtils.wipe_classes(binary_img, classes)
     else:
-        class_relations = class_relations2
+        no_class_img2 = imgUtils.wipe_classes(processed_img, classes)
 
-class_relations = Relation.get_relation_types(class_relations, model_relationship_detect, classes, processed_img, no_class_img)
+    # get relationships
+    remaining_shapes = Relation.detect_relations(no_class_img, image_path)
+    class_relations = Relation.get_relations(remaining_shapes, classes)
 
-# save to ttl
-OntologyUtils.save_as_ontouml_vocab(classes, class_relations, diagram_name)
+    remaining_shapes = Relation.detect_relations(no_class_img2, image_path)
+    class_relations2 = Relation.get_relations(remaining_shapes, classes)
+
+
+    # take whichever detection found the most relationships
+    if len(class_relations) <= len(class_relations2):
+    # If equal # of relations, pick the one which connects more classes
+        if len(class_relations) == len(class_relations2):
+            cl1 = Relation.get_number_of_classes(class_relations)
+            cl2 = Relation.get_number_of_classes(class_relations2)
+            if cl1 <= cl2:
+                class_relations = class_relations
+        else:
+            class_relations = class_relations2
+
+    class_relations = Relation.get_relation_types(class_relations, model_relationship_detect, classes, processed_img, no_class_img)
+
+    # save to ttl
+    OntologyUtils.save_as_ontouml_vocab(classes, class_relations, diagram_name)
+
+def get_image_paths(directory):
+    """
+    Get all image paths in the given directory.
+
+    Args:
+        directory (str): The directory to search for images.
+
+    Returns:
+        list: A list of paths to images in the directory.
+    """
+    image_extensions = {".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff"}
+    image_paths = [os.path.join(directory, f) for f in os.listdir(directory)
+                   if os.path.isfile(os.path.join(directory, f)) and os.path.splitext(f)[1].lower() in image_extensions]
+    return image_paths
+
+def main():
+    """
+    Main function to prompt user for a directory path, find images in the directory,
+    and process each image.
+    """
+    print("loading models")
+    # load model for img classification
+    model_path_ontouml = 'models/my_model_3 class_good'
+    model_OntoUML_detect = tf.keras.models.load_model(model_path_ontouml)
+    # load model for rel classification
+    model_path_relation = 'models\Relationship_classifier'
+    model_relationship_detect = tf.keras.models.load_model(model_path_relation)
+    print("finished leading models")
+
+    directory = input("Please enter the absolute path of the directory containing images: ")
+    
+    if not os.path.isdir(directory):
+        print("The provided path is not a valid directory.")
+        return
+
+    image_paths = get_image_paths(directory)
+    
+    num_images = len(image_paths)
+    print(f"Found {num_images} images in the directory.")
+    
+    if num_images == 0:
+        print("No images found in the directory.")
+        return
+    
+    for image_path in image_paths:
+        print(f"converting: {image_path}")
+        #convert_image(image_path, model_OntoUML_detect, model_relationship_detect)
+
+if __name__ == "__main__":
+    main()
+
+
+

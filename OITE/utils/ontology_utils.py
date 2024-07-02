@@ -93,7 +93,7 @@ class OntologyUtils:
                 continue
 
     @staticmethod
-    def save_as_ontouml_vocab(classes, class_relations, diagram_name):
+    def  save_as_ontouml_vocab(classes, class_relations, diagram_name):
         """
         Saves the given classes and relations as an OntoUML vocabulary in a Turtle file.
 
@@ -114,7 +114,7 @@ class OntologyUtils:
 
         # Bind the namespace prefix to the graph
         g.bind("ontouml", ONTOUML)
-
+ 
         # Create and add class and relationship triples to the graph
         uris = OntologyUtils.create_class_triples(classes, g, ONTOUML)
         OntologyUtils.create_relationship_triples(class_relations, g, ONTOUML, uris)

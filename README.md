@@ -1,18 +1,18 @@
 # OntoUML_IMG_Converter
-should have a link to the paper
-## OITE
-OITE is the tool, developed for translating OntoUML images. For detailed installation and usage instructions, check the README in the 'OITE' directory.
+This repository contains tools and models for converting OntoUML diagram images into OntoUML vocabulary. It is part of the bachelor thesis of Simeon Kaishev and includes the program OITE, which converts OntoUML diagram images into OntoUML vocabulary using image processing and machine learning models. Additionally, the repository includes various artifacts from the development and testing phases. For more details, refer to the [paper](#link-to-paper).
 
-The images used to test the system can be found in the 'Test Images' directory. Additionally the Jupiter notebooks can be found in the 'Notebooks' directory, 
+## OITE
+OITE is the tool, developed for translating OntoUML images. For detailed installation and usage instructions, check the README in the `OITE` directory.
+
+The images used to test the system can be found in the `Test Images` directory. 
+
 ## Link to the datasets used for training:
-datasets can be found on hugging face:
-- link
-- link
-- link
-## Custom GPT
-the gpt was made to test using LLMS for the translation
-- it can be found at: link
-- the images fromt the test can be found in the Test Images dir
+To train the AI models OITE uses, the following datasets were used:
+- [Binary Classifier](#link)
+- [Three-class Classifier](#link)
+- [Relationship Types](#link)
+##  GPT
+A custom GPT model was created to test using LLMs for the translation. It can be found: [here](https://chatgpt.com/g/g-8l61Egeo8-ontouml-image-to-vocab ). The images from the test can be found in the `Test Images` directory.
 
 
 ## Jupyter Notebooks

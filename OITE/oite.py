@@ -128,8 +128,7 @@ def main():
         return
     
     for image_path in image_paths:
-        print(f"converting: {image_path}")
-        #convert_image(image_path, model_OntoUML_detect, model_relationship_detect)
+        convert_image(image_path, model_OntoUML_detect, model_relationship_detect)
 
 if __name__ == "__main__":
     main()

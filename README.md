@@ -3,6 +3,7 @@ should have a link to the paper
 ## OITE
 basically what it is and to check the readme in the OITE directory on how to install it and use it
 link to the list of used images and results can be found in the dir...
+also notebooks used during development can be found in the notebooks folder but they arent maintained
 ## Link to the datasets used for training:
 datasets can be found on hugging face:
 - link

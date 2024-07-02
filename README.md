@@ -4,7 +4,7 @@ This repository contains tools and models for converting OntoUML diagram images 
 ## OITE
 OITE is the tool, developed for translating OntoUML images. For detailed installation and usage instructions, check the README in the `OITE` directory.
 
-The images used to test the system can be found in the `Test Images` directory. 
+The images used to test the system and an overview of the results can be found in the `Test Images` directory. 
 
 ## Link to the datasets used for training:
 To train the AI models OITE uses, the following datasets were used:

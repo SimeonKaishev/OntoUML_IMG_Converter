@@ -8,9 +8,9 @@ The images used to test the system and an overview of the results can be found i
 
 ## Link to the datasets used for training:
 To train the AI models OITE uses, the following datasets were used:
-- [Binary Classifier](#link)
-- [Three-class Classifier](#link)
-- [Relationship Types](#link)
+- [Binary Dataset](https://huggingface.co/datasets/sskaishev/OntoUML2Class)
+- [Three-class Dataset](https://huggingface.co/datasets/sskaishev/OntoUML3Class)
+- [Relationship Types](https://huggingface.co/datasets/sskaishev/RelationshipTypes)
 ##  GPT
 A custom GPT model was created to test using LLMs for the translation. It can be found: [here](https://chatgpt.com/g/g-8l61Egeo8-ontouml-image-to-vocab ). The images from the test can be found in the `Test Images` directory.
 

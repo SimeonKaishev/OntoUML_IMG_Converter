@@ -120,7 +120,7 @@ class OntologyUtils:
         OntologyUtils.create_relationship_triples(class_relations, g, ONTOUML, uris)
         
         # Save the graph to a Turtle file
-        g.serialize(destination=f"{diagram_name}.ttl", format="turtle")
+        g.serialize(destination=f"output/{diagram_name}.ttl", format="turtle")
 
 
     def classify_image(model, img):

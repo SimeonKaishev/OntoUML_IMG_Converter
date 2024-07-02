@@ -1,5 +1,5 @@
 # OntoUML_IMG_Converter
-This repository contains tools and models for converting OntoUML diagram images into OntoUML vocabulary. It is part of the bachelor thesis of Simeon Kaishev and includes the program OITE, which converts OntoUML diagram images into OntoUML vocabulary using image processing and machine learning models. Additionally, the repository includes various artifacts from the development and testing phases. For more details, refer to the [paper](#link-to-paper).
+This repository contains tools and models for converting OntoUML diagram images into OntoUML vocabulary. It is part of the bachelor thesis of Simeon Kaishev and includes the program OITE, which converts OntoUML diagram images into OntoUML vocabulary using image processing and machine learning models. Additionally, the repository includes various artifacts from the development and testing phases. For more details, refer to our [paper](#link-to-paper).
 
 ## OITE
 OITE is the tool, developed for translating OntoUML images. For detailed installation and usage instructions, check the README in the `OITE` directory.
